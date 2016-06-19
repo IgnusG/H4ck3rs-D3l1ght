@@ -4,8 +4,8 @@
 class Keywords:
     MV_PTR = '.'
     E_CELL = '!'
-    RW_NUM = '='
-    RW_CHAR = '@'
+    IO_NUM = '='
+    IO_CHAR = '@'
     COND = '?'
     HACK = 'H4ck3rs'
     HACK_AUX = ('Hackers', 'H4ckers', 'Hack3rs')

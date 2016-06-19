@@ -14,3 +14,15 @@ class Tokens:
 
     class DecrementCell:
         pass
+
+    class OutputNumCell:
+        pass
+
+    class InputNumCell:
+        pass
+
+    class OutputCharCell:
+        pass
+
+    class InputCharCell:
+        pass
