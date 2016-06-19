@@ -5,12 +5,12 @@ from classes.tokenizer import Tokenizer
 from classes.warnings import Warnings
 
 
-class BaseLanguageMatcher:
-    class BaseWordOrder(Enum):
-        LR = 1
-        RL = 2
+class HackersDelightMatcher:
+    class WordOrder(Enum):
+        HD = 1
+        DH = 2
 
-    class AlternativeUsed(Warning):
+    class LazyPersonDetected(Warning):
         def __init__(self, pointer, used_alternative, suggested_word):
             self.pointer = pointer
             self.used_alternative = used_alternative
@@ -20,14 +20,14 @@ class BaseLanguageMatcher:
     def match(tokenizer: Tokenizer):
         tokenizer.take_snapshot()
 
-        first_word = BaseLanguageMatcher.match_baseword(tokenizer)
-        second_word = BaseLanguageMatcher.match_baseword(tokenizer) if first_word else False
+        first_word = HackersDelightMatcher.match_baseword(tokenizer)
+        second_word = HackersDelightMatcher.match_baseword(tokenizer) if first_word else False
         couple = (first_word, second_word)
 
         if couple == (Keywords.HACK, Keywords.DEL):
-            return BaseLanguageMatcher.BaseWordOrder.LR
+            return HackersDelightMatcher.WordOrder.HD
         if couple == (Keywords.DEL, Keywords.HACK):
-            return BaseLanguageMatcher.BaseWordOrder.RL
+            return HackersDelightMatcher.WordOrder.DH
 
         tokenizer.rollback_snapshot()
         return False
@@ -53,7 +53,7 @@ class BaseLanguageMatcher:
                 for alt in alternatives:
                     if alt[token_pointer] == token_char:
                         Warnings.add_warning(
-                            BaseLanguageMatcher.AlternativeUsed(tokenizer.pointer_at, alt, suggested_word))
+                            HackersDelightMatcher.LazyPersonDetected(tokenizer.pointer_at, alt, suggested_word))
                         break
                 else:
                     return False
