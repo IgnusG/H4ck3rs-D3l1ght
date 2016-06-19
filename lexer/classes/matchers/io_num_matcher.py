@@ -1,4 +1,5 @@
-from lexer.classes.definitions.tokens import Tokens
+from lexer.classes.definitions.tokens import InputNumCell
+from lexer.classes.definitions.tokens import OutputNumCell
 from lexer.classes.tokenizer import Tokenizer
 from lexer.classes.definitions.keywords import Keywords
 from .hackersdelight_matcher import HackersDelightMatcher
@@ -11,9 +12,9 @@ class IONumMatcher:
 
         if tokenizer.consume() == Keywords.IO_NUM:
             if baseword_order == HackersDelightMatcher.WordOrder.HD:
-                return Tokens.OutputNumCell
+                return OutputNumCell()
             elif baseword_order == HackersDelightMatcher.WordOrder.DH:
-                return Tokens.InputNumCell
+                return InputNumCell()
         else:
             tokenizer.rollback_snapshot()
             return False
