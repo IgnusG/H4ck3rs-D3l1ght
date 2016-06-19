@@ -1,20 +1,21 @@
-from lexer.classes.definitions.tokens import PointerLeft
-from lexer.classes.definitions.tokens import PointerRight
-from lexer.classes.tokenizer import Tokenizer
-from lexer.classes.definitions.keywords import Keywords
+from lexer.definitions.tokens import DecrementCell
+from lexer.definitions.tokens import IncrementCell
+from lexer.tokenizer import Tokenizer
+
+from lexer.definitions.keywords import Keywords
 from .hackersdelight_matcher import HackersDelightMatcher
 
 
-class MovePointerMatcher:
+class EditCellMatcher:
     @staticmethod
     def match(tokenizer: Tokenizer, baseword_order: HackersDelightMatcher.WordOrder):
         tokenizer.take_snapshot()
 
-        if tokenizer.consume() == Keywords.MV_PTR:
+        if tokenizer.consume() == Keywords.E_CELL:
             if baseword_order == HackersDelightMatcher.WordOrder.HD:
-                return PointerRight()
+                return IncrementCell()
             elif baseword_order == HackersDelightMatcher.WordOrder.DH:
-                return PointerLeft()
+                return DecrementCell()
         else:
             tokenizer.rollback_snapshot()
             return False

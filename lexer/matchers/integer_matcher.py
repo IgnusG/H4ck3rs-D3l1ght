@@ -1,5 +1,6 @@
-from lexer.classes.tokenizer import Tokenizer
-from lexer.classes.definitions.tokens import Integer
+from lexer.tokenizer import Tokenizer
+
+from lexer.definitions.tokens import Integer
 
 
 class IntegerMatcher:
