@@ -54,11 +54,16 @@ class HackersDelightMatcher:
                     if alt[token_pointer] == token_char:
                         Warnings.add_warning(
                             HackersDelightMatcher.LazyPersonDetected(tokenizer.pointer_at, alt, suggested_word))
+                        # TODO: Suggested words are not checked for completion
+                        # TODO: Suggested words need to be matched by longest prefix
                         break
                 else:
                     return False
 
             token_pointer += 1
             tokenizer.consume()
+
+            if token_pointer == suggested_word.len:
+                break
 
         return True

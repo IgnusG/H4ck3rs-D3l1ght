@@ -4,7 +4,7 @@ from lexer.classes.definitions.keywords import Keywords
 from .hackersdelight_matcher import HackersDelightMatcher
 
 
-class EditCellMatcher:
+class IONumMatcher:
     @staticmethod
     def match(tokenizer: Tokenizer, baseword_order: HackersDelightMatcher.WordOrder):
         tokenizer.take_snapshot()
