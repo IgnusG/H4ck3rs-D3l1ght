@@ -1,18 +1,18 @@
 from classes.definitions.tokens import Tokens
 from classes.definitions.keywords import Keywords
 from classes.tokenizer import Tokenizer
-from .baselanguage_matcher import BaseLanguageMatcher
+from .hackersdelight_matcher import HackersDelightMatcher
 
 
 class EditCellMatcher:
     @staticmethod
-    def match(tokenizer: Tokenizer, baseword_order: BaseLanguageMatcher.BaseWordOrder):
+    def match(tokenizer: Tokenizer, baseword_order: HackersDelightMatcher.WordOrder):
         tokenizer.take_snapshot()
 
         if tokenizer.consume() == Keywords.E_CELL:
-            if baseword_order == BaseLanguageMatcher.BaseWordOrder.LR:
+            if baseword_order == HackersDelightMatcher.WordOrder.HD:
                 return Tokens.IncrementCell
-            elif baseword_order == BaseLanguageMatcher.BaseWordOrder.RL:
+            elif baseword_order == HackersDelightMatcher.WordOrder.DH:
                 return Tokens.DecrementCell
         else:
             tokenizer.rollback_snapshot()
