@@ -1,8 +1,10 @@
 from enum import Enum
-from lexer.classes.tokenizer import Tokenizer
-from lexer.classes.warnings import Warnings
 
-from lexer.classes.definitions.keywords import Keywords
+from lexer.tokenizer import Tokenizer
+from lexer.warnings import Warnings
+
+from helpers.error_handling import HackersWarning
+from lexer.definitions.keywords import Keywords
 
 
 class HackersDelightMatcher:
@@ -10,9 +12,9 @@ class HackersDelightMatcher:
         HD = 1
         DH = 2
 
-    class LazyPersonDetected(Warning):
+    class LazyPersonDetected(HackersWarning):
         def __init__(self, pointer, used_alternative, suggested_word):
-            self.pointer = pointer
+            super.__init__(pointer)
             self.used_alternative = used_alternative
             self.suggested_word = suggested_word
 
