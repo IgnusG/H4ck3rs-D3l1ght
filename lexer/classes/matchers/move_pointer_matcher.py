@@ -1,6 +1,6 @@
-from classes.definitions.tokens import Tokens
-from classes.definitions.keywords import Keywords
-from classes.tokenizer import Tokenizer
+from lexer.classes.definitions.tokens import Tokens
+from lexer.classes.tokenizer import Tokenizer
+from lexer.classes.definitions.keywords import Keywords
 from .hackersdelight_matcher import HackersDelightMatcher
 
 

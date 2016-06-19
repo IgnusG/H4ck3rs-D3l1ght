@@ -1,8 +1,8 @@
 from enum import Enum
+from lexer.classes.tokenizer import Tokenizer
+from lexer.classes.warnings import Warnings
 
-from classes.definitions.keywords import Keywords
-from classes.tokenizer import Tokenizer
-from classes.warnings import Warnings
+from lexer.classes.definitions.keywords import Keywords
 
 
 class HackersDelightMatcher:
