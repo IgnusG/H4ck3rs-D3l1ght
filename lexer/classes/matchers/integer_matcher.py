@@ -1,5 +1,5 @@
 from lexer.classes.tokenizer import Tokenizer
-from lexer.classes.definitions.tokens import Tokens
+from lexer.classes.definitions.tokens import Integer
 
 
 class IntegerMatcher:
@@ -12,4 +12,4 @@ class IntegerMatcher:
                 break
             token_string += tokenizer.consume()
 
-        return Tokens.Integer(int(token_string)) if token_string else False
+        return Integer(int(token_string)) if token_string else False
