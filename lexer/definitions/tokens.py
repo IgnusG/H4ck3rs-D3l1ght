@@ -3,6 +3,12 @@ class Token:
         self.value = value
         self.pointer = pointer
 
+    def __eq__(self, other):
+        return (isinstance(other, self.__class__)) and self.pointer == other.pointer and self.value == other.value
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 
 class Integer(Token):
     pass

@@ -18,29 +18,54 @@ class TokenStream:
     def append(self, item):
         self.token_stream.append(item)
 
+    def insert(self, position, item):
+        self.token_stream.insert(position, item)
+
+    def __iter__(self):
+        return self.token_stream
+
+    def __len__(self):
+        return len(self.token_stream)
+
+    def __getitem__(self, item):
+        return self.token_stream[item]
+
+    def __eq__(self, other):
+        return self.token_stream == other.token_stream
+
 
 class Matcher:
     class WhatTheHellManException(HackersException):
         def __init__(self, pointer):
             super.__init__(pointer)
 
+    # Let's define primary words and singletons here. Order defines order of significance
+    @staticmethod
+    def match_primary_keyword(tokenizer: Tokenizer):
+        return [token for token in [
+            HackersDelightMatcher.match(tokenizer),
+            IntegerMatcher.match(tokenizer)
+        ] if token][0]
+
+    # Here are all indicator keyword matchers. For order same goes as above
+    @staticmethod
+    def match_indicator_keyword(order, tokenizer: Tokenizer):
+        return [token for token in [
+            MovePointerMatcher.match(tokenizer, order),
+            EditCellMatcher.match(tokenizer, order),
+            IONumMatcher.match(tokenizer, order),
+            IOCharMatcher.match(tokenizer, order)
+        ] if token][0]
+
     @staticmethod
     def start(tokenizer: Tokenizer):
         token_stream = TokenStream([])
 
         while not tokenizer.reached_end():
-            token = [token for token in [
-                HackersDelightMatcher.match(tokenizer),
-                IntegerMatcher.match(tokenizer)
-            ] if token][0]
+            token = Matcher.match_primary_keyword(tokenizer)
 
             if isinstance(token, HackersDelightMatcher.WordOrder):
-                token = [token for token in [
-                    MovePointerMatcher.match(tokenizer, token),
-                    EditCellMatcher.match(tokenizer, token),
-                    IONumMatcher.match(tokenizer, token),
-                    IOCharMatcher.match(tokenizer, token)
-                ] if token][0]
+                token = Matcher.match_indicator_keyword(token, tokenizer)
 
             if not token:
                 Warnings.add_exception(Matcher.WhatTheHellManException(tokenizer.pointer_at()))

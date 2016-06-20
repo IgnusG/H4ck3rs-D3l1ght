@@ -6,6 +6,6 @@ class Lexer:
     @staticmethod
     def start(text: str):
         tokenizer = Tokenizer(''.join(text.split()))
-        tokenized_stream = Matcher.start(tokenizer)
+        token_stream = Matcher.start(tokenizer)
 
-        return tokenized_stream
+        return token_stream
