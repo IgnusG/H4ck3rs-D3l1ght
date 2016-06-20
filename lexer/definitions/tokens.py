@@ -1,40 +1,40 @@
 class Token:
-    def __init__(self, value=''):
+    def __init__(self, pointer, value=''):
         self.value = value
+        self.pointer = pointer
 
 
 class Integer(Token):
-    def __init__(self, value):
-        super().__init__(value)
-
-
-class PointerLeft:
     pass
 
 
-class PointerRight:
+class PointerLeft(Token):
     pass
 
 
-class IncrementCell:
+class PointerRight(Token):
     pass
 
 
-class DecrementCell:
+class IncrementCell(Token):
     pass
 
 
-class OutputNumCell:
+class DecrementCell(Token):
     pass
 
 
-class InputNumCell:
+class OutputNumCell(Token):
     pass
 
 
-class OutputCharCell:
+class InputNumCell(Token):
     pass
 
 
-class InputCharCell:
+class OutputCharCell(Token):
+    pass
+
+
+class InputCharCell(Token):
     pass

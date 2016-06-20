@@ -27,8 +27,10 @@ class HackersDelightMatcher:
         couple = (first_word, second_word)
 
         if couple == (Keywords.HACK, Keywords.DEL):
+            tokenizer.purge_snapshot()
             return HackersDelightMatcher.WordOrder.HD
         if couple == (Keywords.DEL, Keywords.HACK):
+            tokenizer.purge_snapshot()
             return HackersDelightMatcher.WordOrder.DH
 
         tokenizer.rollback_snapshot()
@@ -36,36 +38,37 @@ class HackersDelightMatcher:
 
     @staticmethod
     def match_baseword(tokenizer: Tokenizer) -> Keywords:
-        token_string = tokenizer.consume()
-        token_pointer = 1
+        token_word = ''
+        matched_word = ''
+        pointer = tokenizer.pointer_at()
 
-        # TODO: This needs to go inside the loop: Alternatives should be considered for the first character as well
-        if token_string == Keywords.HACK[0]:
-            suggested_word = Keywords.HACK
-            alternatives = Keywords.HACK_AUX
-        elif token_string == Keywords.DEL[0]:
-            suggested_word = Keywords.DEL
-            alternatives = Keywords.DEL_AUX
-        else:
-            return False
+        auxiliary_keywords = Keywords.HACK_AUX + Keywords.DEL_AUX
+        all_keywords = [Keywords.HACK, Keywords.DEL] + auxiliary_keywords
 
         while not tokenizer.reached_end():
-            token_char = tokenizer.peek()
-            if not suggested_word[token_pointer] == token_char:
-                for alt in alternatives:
-                    if alt[token_pointer] == token_char:
-                        Warnings.add_warning(
-                            HackersDelightMatcher.LazyPersonDetected(tokenizer.pointer_at, alt, suggested_word))
-                        # TODO: Suggested words are not checked for completion
-                        # TODO: Suggested words need to be matched by longest prefix
+            one_matched = False
+            token_word += tokenizer.peek()
+            for word in all_keywords:
+                if word.starts_with(token_word):
+                    tokenizer.consume()
+                    one_matched = True
+
+                    if word == token_word:
+                        if matched_word:
+                            tokenizer.purge_snapshot()
+                        tokenizer.take_snapshot()
+                        matched_word = word
                         break
-                else:
+            else:
+                if not one_matched and matched_word:
+                    tokenizer.rollback_snapshot()
+                    break
+                if not one_matched and not matched_word:
                     return False
 
-            token_pointer += 1
-            tokenizer.consume()
+        if matched_word in auxiliary_keywords:
+            auxiliary_word = matched_word
+            matched_word = Keywords.HACK if matched_word in Keywords.HACK_AUX else Keywords.DEL
+            Warnings.add_warning(HackersDelightMatcher.LazyPersonDetected(pointer, auxiliary_word, matched_word))
 
-            if token_pointer == suggested_word.len:
-                break
-
-        return True
+        return matched_word

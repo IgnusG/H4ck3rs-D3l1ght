@@ -24,7 +24,8 @@ class Matcher:
         def __init__(self, pointer):
             super.__init__(pointer)
 
-    def __init__(self, tokenizer: Tokenizer):
+    @staticmethod
+    def start(tokenizer: Tokenizer):
         token_stream = TokenStream([])
 
         while not tokenizer.reached_end():
@@ -46,3 +47,5 @@ class Matcher:
                 tokenizer.consume()
             else:
                 token_stream.append(token)
+
+        return token_stream
