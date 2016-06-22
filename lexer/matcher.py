@@ -25,7 +25,7 @@ class TokenStream:
             del self.token_stream[position+1]
 
     def __iter__(self):
-        return self.token_stream
+        return iter(self.token_stream)
 
     def __len__(self):
         return len(self.token_stream)

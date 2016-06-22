@@ -1,4 +1,4 @@
-from lexer.definitions.tokens import Integer, OutputNumCell, InputNumCell, Token
+from lexer.definitions.tokens import *
 
 
 class ComplexToken(Token):
@@ -17,4 +17,10 @@ class OutputNumDirect(ComplexToken):
 class InputNumDirect(ComplexToken):
     def __init__(self, integer: Integer, input_num_cell: InputNumCell):
         super(InputNumDirect, self).__init__(integer, input_num_cell)
+        self.value = integer.value
+
+
+class OutputCharDirect(ComplexToken):
+    def __init__(self, integer: Integer, output_char_cell: OutputCharCell):
+        super(OutputCharDirect, self).__init__(integer, output_char_cell)
         self.value = integer.value
