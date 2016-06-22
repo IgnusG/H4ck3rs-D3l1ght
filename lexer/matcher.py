@@ -18,8 +18,11 @@ class TokenStream:
     def append(self, item):
         self.token_stream.append(item)
 
-    def insert(self, position, item):
+    def replace_with(self, position, item: Token):
         self.token_stream.insert(position, item)
+
+        for i in range(item.token_count):
+            del self.token_stream[position+1]
 
     def __iter__(self):
         return self.token_stream
@@ -37,35 +40,40 @@ class TokenStream:
 class Matcher:
     class WhatTheHellManException(HackersException):
         def __init__(self, pointer):
-            super.__init__(pointer)
+            super(Matcher.WhatTheHellManException, self).__init__(pointer)
 
     # Let's define primary words and singletons here. Order defines order of significance
     @staticmethod
     def match_primary_keyword(tokenizer: Tokenizer):
-        return [token for token in [
+        tokens = [token for token in [
             HackersDelightMatcher.match(tokenizer),
             IntegerMatcher.match(tokenizer)
-        ] if token][0]
+        ] if token]
+
+        return tokens[0] if tokens else False
 
     # Here are all indicator keyword matchers. For order same goes as above
     @staticmethod
-    def match_indicator_keyword(order, tokenizer: Tokenizer):
-        return [token for token in [
-            MovePointerMatcher.match(tokenizer, order),
-            EditCellMatcher.match(tokenizer, order),
-            IONumMatcher.match(tokenizer, order),
-            IOCharMatcher.match(tokenizer, order)
-        ] if token][0]
+    def match_indicator_keyword(order, pointer, tokenizer: Tokenizer):
+        tokens = [token for token in [
+            MovePointerMatcher.match(tokenizer, order, pointer),
+            EditCellMatcher.match(tokenizer, order, pointer),
+            IONumMatcher.match(tokenizer, order, pointer),
+            IOCharMatcher.match(tokenizer, order, pointer)
+        ] if token]
+
+        return tokens[0] if tokens else False
 
     @staticmethod
     def start(tokenizer: Tokenizer):
         token_stream = TokenStream([])
 
         while not tokenizer.reached_end():
+            word_start_pointer = tokenizer.pointer_at()
             token = Matcher.match_primary_keyword(tokenizer)
 
             if isinstance(token, HackersDelightMatcher.WordOrder):
-                token = Matcher.match_indicator_keyword(token, tokenizer)
+                token = Matcher.match_indicator_keyword(token, word_start_pointer, tokenizer)
 
             if not token:
                 Warnings.add_exception(Matcher.WhatTheHellManException(tokenizer.pointer_at()))

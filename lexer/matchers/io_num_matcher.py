@@ -8,14 +8,14 @@ from .hackersdelight_matcher import HackersDelightMatcher
 
 class IONumMatcher:
     @staticmethod
-    def match(tokenizer: Tokenizer, baseword_order: HackersDelightMatcher.WordOrder):
+    def match(tokenizer: Tokenizer, baseword_order: HackersDelightMatcher.WordOrder, pointer):
         tokenizer.take_snapshot()
 
-        if tokenizer.consume() == Keywords.IO_NUM:
+        if not tokenizer.reached_end() and tokenizer.consume() == Keywords.IO_NUM:
             if baseword_order == HackersDelightMatcher.WordOrder.HD:
-                return OutputNumCell()
+                return OutputNumCell(pointer)
             elif baseword_order == HackersDelightMatcher.WordOrder.DH:
-                return InputNumCell()
+                return InputNumCell(pointer)
         else:
             tokenizer.rollback_snapshot()
             return False

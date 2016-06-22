@@ -8,14 +8,14 @@ from .hackersdelight_matcher import HackersDelightMatcher
 
 class EditCellMatcher:
     @staticmethod
-    def match(tokenizer: Tokenizer, baseword_order: HackersDelightMatcher.WordOrder):
+    def match(tokenizer: Tokenizer, baseword_order: HackersDelightMatcher.WordOrder, pointer):
         tokenizer.take_snapshot()
 
-        if tokenizer.consume() == Keywords.E_CELL:
+        if not tokenizer.reached_end() and tokenizer.consume() == Keywords.E_CELL:
             if baseword_order == HackersDelightMatcher.WordOrder.HD:
-                return IncrementCell()
+                return IncrementCell(pointer)
             elif baseword_order == HackersDelightMatcher.WordOrder.DH:
-                return DecrementCell()
+                return DecrementCell(pointer)
         else:
             tokenizer.rollback_snapshot()
             return False

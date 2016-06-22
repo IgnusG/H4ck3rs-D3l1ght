@@ -5,6 +5,7 @@ class ComplexToken(Token):
     def __init__(self, primary_token, *more_tokens):
         super(ComplexToken, self).__init__(primary_token.pointer)
         self.token_list = [primary_token] + list(more_tokens)
+        self.token_count = len(self.token_list)
 
 
 class OutputNumDirect(ComplexToken):

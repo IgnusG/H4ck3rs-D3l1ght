@@ -1,5 +1,6 @@
 class Token:
     def __init__(self, pointer, value=''):
+        self.token_count = 1
         self.value = value
         self.pointer = pointer
 

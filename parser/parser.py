@@ -13,7 +13,8 @@ class IntegerPositionBadProgrammerSucks(HackersException):
 class Parser:
     @staticmethod
     def start(token_stream: TokenStream):
-        for counter in range(len(token_stream)):
+        counter = 0
+        while True:
             first_instance = token_stream[counter]
             if isinstance(first_instance, Integer):
                 second_instance = token_stream[counter+1]
@@ -25,7 +26,10 @@ class Parser:
                     Warnings.add_exception(HackersException(first_instance.pointer))
                     continue
 
-                token_stream.insert(counter, new_token)
+                token_stream.replace_with(counter, new_token)
                 counter += 1
+
+                if counter >= len(token_stream):
+                    break
 
         return token_stream
