@@ -8,14 +8,14 @@ from .hackersdelight_matcher import HackersDelightMatcher
 
 class MovePointerMatcher:
     @staticmethod
-    def match(tokenizer: Tokenizer, baseword_order: HackersDelightMatcher.WordOrder):
+    def match(tokenizer: Tokenizer, baseword_order: HackersDelightMatcher.WordOrder, pointer):
         tokenizer.take_snapshot()
 
-        if tokenizer.consume() == Keywords.MV_PTR:
+        if not tokenizer.reached_end() and tokenizer.consume() == Keywords.MV_PTR:
             if baseword_order == HackersDelightMatcher.WordOrder.HD:
-                return PointerRight()
+                return PointerRight(pointer)
             elif baseword_order == HackersDelightMatcher.WordOrder.DH:
-                return PointerLeft()
+                return PointerLeft(pointer)
         else:
             tokenizer.rollback_snapshot()
             return False

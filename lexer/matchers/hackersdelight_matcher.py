@@ -14,7 +14,7 @@ class HackersDelightMatcher:
 
     class LazyPersonDetected(HackersWarning):
         def __init__(self, pointer, used_alternative, suggested_word):
-            super.__init__(pointer)
+            super(HackersDelightMatcher.LazyPersonDetected, self).__init__(pointer)
             self.used_alternative = used_alternative
             self.suggested_word = suggested_word
 
@@ -43,14 +43,15 @@ class HackersDelightMatcher:
         pointer = tokenizer.pointer_at()
 
         auxiliary_keywords = Keywords.HACK_AUX + Keywords.DEL_AUX
-        all_keywords = [Keywords.HACK, Keywords.DEL] + auxiliary_keywords
+        all_keywords = (Keywords.HACK, Keywords.DEL) + auxiliary_keywords
 
         while not tokenizer.reached_end():
             one_matched = False
             token_word += tokenizer.peek()
             for word in all_keywords:
-                if word.starts_with(token_word):
-                    tokenizer.consume()
+                if word.startswith(token_word):
+                    if not one_matched:
+                        tokenizer.consume()
                     one_matched = True
 
                     if word == token_word:
@@ -65,6 +66,8 @@ class HackersDelightMatcher:
                     break
                 if not one_matched and not matched_word:
                     return False
+        else:
+            return False
 
         if matched_word in auxiliary_keywords:
             auxiliary_word = matched_word

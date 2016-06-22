@@ -15,24 +15,23 @@ class Tokenizer:
         del self.snapshots[-1]
 
     # Handle unexpected EOF
-    def check_eof_error(self, func):
-        if self.pointer >= self.stream.len:
+    def check_eof_error(self):
+        if self.pointer >= len(self.stream):
             raise EOFError
-        return func
 
     # Tokenize Input
-    @check_eof_error
     def consume(self) -> str:
+        self.check_eof_error()
         item = self.stream[self.pointer]
         self.pointer += 1
         return item
 
-    @check_eof_error
     def peek(self) -> str:
+        self.check_eof_error()
         return self.stream[self.pointer]
 
     def reached_end(self) -> bool:
-        return self.pointer >= self.stream.len
+        return self.pointer >= len(self.stream)
 
     def pointer_at(self) -> int:
         return self.pointer
