@@ -1,6 +1,7 @@
+import sys
+
 from lexer.lexer import Lexer
 from parser.parser import Parser
-from lexer.definitions.tokens import *
 from parser.complex_tokens import *
 
 
@@ -10,13 +11,17 @@ class CriticalExceptionOMG(Exception):
 
 class Interpreter:
     @staticmethod
-    def start():
+    def start(out=sys.stdout):
         internal_storage = [0]
         internal_pointer = 0
 
         # Interpreter Loop
         while True:
             user_input = input()
+
+            if not user_input:
+                out.flush()
+                break
 
             token_stream = Lexer.start(user_input)
             parsed_stream = Parser.start(token_stream)
@@ -30,37 +35,35 @@ class Interpreter:
 
                 elif isinstance(token, PointerRight):
                     internal_pointer += 1
-
-                elif isinstance(token, IncrementCell):
-                    if internal_pointer > len(internal_storage):
+                    if internal_pointer >= len(internal_storage):
                         internal_storage += [0] * (internal_pointer - len(internal_storage) + 1)
 
+                elif isinstance(token, IncrementCell):
                     internal_storage[internal_pointer] += 1
 
                 elif isinstance(token, DecrementCell):
-                    if internal_pointer > len(internal_storage):
-                        internal_storage += [0] * (internal_pointer - len(internal_storage) + 1)
-
                     internal_storage[internal_pointer] -= 1
 
                 elif isinstance(token, OutputNumCell):
-                    print(internal_storage[internal_pointer])
+                    out.write(str(internal_storage[internal_pointer]))
 
                 elif isinstance(token, InputNumCell):
                     number = int(input())
                     internal_storage[internal_pointer] = number
 
                 elif isinstance(token, OutputNumDirect):
-                    print(token.value)
+                    out.write(str(token.value))
 
                 elif isinstance(token, InputNumDirect):
                     internal_storage[internal_pointer] = token.value
 
                 elif isinstance(token, OutputCharCell):
-                    print(chr(internal_storage[internal_pointer]))
+                    out.write(chr(internal_storage[internal_pointer]))
 
                 elif isinstance(token, InputCharCell):
                     pass
+                elif isinstance(token, OutputCharDirect):
+                    out.write(chr(token.value))
 
                 else:
                     raise CriticalExceptionOMG()

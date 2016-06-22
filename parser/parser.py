@@ -1,8 +1,7 @@
 from helpers.error_handling import HackersException
 from lexer.matcher import TokenStream
-from lexer.definitions.tokens import *
 from lexer.warnings import Warnings
-from parser.complex_tokens import OutputNumDirect, InputNumDirect
+from parser.complex_tokens import *
 
 
 class IntegerPositionBadProgrammerSucks(HackersException):
@@ -22,14 +21,16 @@ class Parser:
                     new_token = OutputNumDirect(first_instance, second_instance)
                 elif isinstance(second_instance, InputNumCell):
                     new_token = InputNumDirect(first_instance, second_instance)
+                elif isinstance(second_instance, OutputCharCell):
+                    new_token = OutputCharDirect(first_instance, second_instance)
                 else:
                     Warnings.add_exception(HackersException(first_instance.pointer))
                     continue
 
                 token_stream.replace_with(counter, new_token)
-                counter += 1
 
-                if counter >= len(token_stream):
-                    break
+            counter += 1
+            if counter >= len(token_stream):
+                break
 
         return token_stream
