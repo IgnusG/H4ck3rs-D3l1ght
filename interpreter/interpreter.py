@@ -10,18 +10,32 @@ class CriticalExceptionOMG(Exception):
 
 
 class Interpreter:
+    version = '0.1'
+
     @staticmethod
     def start(out=sys.stdout):
         internal_storage = [0]
         internal_pointer = 0
 
+        out.write('Heya! This is the H4ck3rs D3l1ght Interpreter ' + Interpreter.version + '\n')
+        out.flush()
+
         # Interpreter Loop
         while True:
-            user_input = input()
+            out.write('#> ')
+            user_input = ''
 
-            if not user_input:
-                out.flush()
+            tmp_input = True
+            while tmp_input:
+                tmp_input = input()
+                user_input += tmp_input
+
+            if user_input == '#exit':
                 break
+            if user_input == '#clear':
+                out.write('Registers cleared...')
+                internal_storage = [0]
+                internal_pointer = 0
 
             token_stream = Lexer.start(user_input)
             parsed_stream = Parser.start(token_stream)
@@ -67,3 +81,9 @@ class Interpreter:
 
                 else:
                     raise CriticalExceptionOMG()
+
+            out.write('\n')
+            out.flush()
+
+        out.write('Bye\n')
+        out.flush()
