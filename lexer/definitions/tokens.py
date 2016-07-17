@@ -45,3 +45,11 @@ class OutputCharCell(Token):
 
 class InputCharCell(Token):
     pass
+
+
+class Condition(Token):
+    pass
+
+
+class JumpBack(Token):
+    pass
