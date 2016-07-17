@@ -18,3 +18,7 @@ class InterpreterTest(unittest.TestCase):
     def test_interpreter_conditions(self):
         user_input = 'HD! HD! HD! HD? HD= DH! DH? HD! HD='
         self.assertEqual(Interpreter.run_interpreter(user_input), '3211')
+
+    def test_interpreter_nested_conditions(self):
+        user_input = 'HD! HD! HD! HD? HD= DH! HD. HD! HD! HD? HD= DH! DH? DH. DH?'
+        self.assertEqual(Interpreter.run_interpreter(user_input), '321221121')
