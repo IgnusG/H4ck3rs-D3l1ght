@@ -5,15 +5,14 @@ from parser.complex_tokens import *
 
 
 class IntegerPositionBadProgrammerSucks(HackersException):
-    def __init__(self):
-        pass
+    pass
 
 
 class Parser:
     @staticmethod
     def start(token_stream: TokenStream):
         counter = 0
-        while True:
+        while counter < len(token_stream):
             first_instance = token_stream[counter]
             if isinstance(first_instance, Integer):
                 second_instance = token_stream[counter+1]
@@ -24,13 +23,11 @@ class Parser:
                 elif isinstance(second_instance, OutputCharCell):
                     new_token = OutputCharDirect(first_instance, second_instance)
                 else:
-                    Warnings.add_exception(HackersException(first_instance.pointer))
+                    Warnings.add_exception(IntegerPositionBadProgrammerSucks(first_instance.pointer))
                     continue
 
                 token_stream.replace_with(counter, new_token)
 
             counter += 1
-            if counter >= len(token_stream):
-                break
 
         return token_stream
