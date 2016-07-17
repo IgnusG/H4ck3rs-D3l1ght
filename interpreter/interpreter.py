@@ -17,12 +17,15 @@ class Interpreter:
     internal_storage = [0]
 
     @staticmethod
-    def run_input(stream):
-        token_stream = Lexer.start(stream)
-        parsed_stream = Parser.start(token_stream)
+    def reset_storage():
+        Interpreter.internal_pointer = 0
+        Interpreter.internal_storage = [0]
+
+    @staticmethod
+    def simulate_statements(token_stream):
         out = StringIO()
 
-        for token in parsed_stream:
+        for token in token_stream:
             if isinstance(token, PointerLeft):
                 if Interpreter.internal_pointer == 0:
                     Interpreter.internal_storage.insert(0, 0)
@@ -32,7 +35,8 @@ class Interpreter:
             elif isinstance(token, PointerRight):
                 Interpreter.internal_pointer += 1
                 if Interpreter.internal_pointer >= len(Interpreter.internal_storage):
-                    Interpreter.internal_storage += [0] * (Interpreter.internal_pointer - len(Interpreter.internal_storage) + 1)
+                    Interpreter.internal_storage += [0] * (
+                    Interpreter.internal_pointer - len(Interpreter.internal_storage) + 1)
 
             elif isinstance(token, IncrementCell):
                 Interpreter.internal_storage[Interpreter.internal_pointer] += 1
@@ -44,7 +48,7 @@ class Interpreter:
                 out.write(str(Interpreter.internal_storage[Interpreter.internal_pointer]))
 
             elif isinstance(token, InputNumCell):
-                number = int(stream())
+                number = int(token.value)
                 Interpreter.internal_storage[Interpreter.internal_pointer] = number
 
             elif isinstance(token, OutputNumDirect):
@@ -58,13 +62,24 @@ class Interpreter:
 
             elif isinstance(token, InputCharCell):
                 pass
+
             elif isinstance(token, OutputCharDirect):
                 out.write(chr(token.value))
+
+            elif isinstance(token, ConditionalStatement):
+                out.write(Interpreter.simulate_statements(
+                    token.evaluate_condition(Interpreter.internal_storage[Interpreter.internal_pointer])))
 
             else:
                 raise CriticalExceptionOMG()
 
         return out.getvalue()
+
+    @staticmethod
+    def run_interpreter(stream):
+        token_stream = Lexer.start(stream)
+        parsed_stream = Parser.start(token_stream)
+        return Interpreter.simulate_statements(parsed_stream)
 
     @staticmethod
     def start(out=sys.stdout):
@@ -86,10 +101,9 @@ class Interpreter:
                 break
             if user_input == '#clear':
                 out.write('Registers cleared...')
-                Interpreter.internal_storage = [0]
-                Interpreter.internal_pointer = 0
+                Interpreter.reset_storage()
 
-            out.write(Interpreter.run_input(user_input))
+            out.write(Interpreter.run_interpreter(user_input))
             out.write('\n')
             out.flush()
 

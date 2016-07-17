@@ -1,10 +1,11 @@
 from lexer.definitions.tokens import *
+from lexer.matcher import TokenStream
 
 
 class ComplexToken(Token):
     def __init__(self, primary_token: Token, *more_tokens):
         super(ComplexToken, self).__init__(primary_token.pointer)
-        self.token_list = [primary_token] + list(more_tokens)
+        self.token_list = TokenStream([primary_token] + list(more_tokens))
         self.token_count = len(self.token_list)
 
 
@@ -31,7 +32,7 @@ class ConditionalStatement(ComplexToken):
         super(ConditionalStatement, self).__init__(condition, *body)
 
     def evaluate_condition(self, current_field_value: int):
-        if current_field_value:
-            return self.token_list
+        if current_field_value and len(self.token_list) > 1:
+            return self.token_list[1:] + [self]
         else:
             return []
