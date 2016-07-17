@@ -21,3 +21,8 @@ class TestParserStream(unittest.TestCase):
         tokentream_oracle = TokenStream([IncrementCell(0), ConditionalStatement(Condition(3), [PointerRight(6)]), OutputNumCell(12)])
         actual_tokenstream = Parser.start(TokenStream([IncrementCell(0), Condition(3), PointerRight(6), JumpBack(9), OutputNumCell(12)]))
         self.assertSequenceEqual(actual_tokenstream, tokentream_oracle)
+
+    def test_nested_condition_stream(self):
+        tokentream_oracle = TokenStream([IncrementCell(0), ConditionalStatement(Condition(3), [PointerRight(6), ConditionalStatement(Condition(9), [PointerLeft(12)])]), OutputNumCell(21)])
+        actual_tokenstream = Parser.start(TokenStream([IncrementCell(0), Condition(3), PointerRight(6), Condition(9), PointerLeft(12), JumpBack(15), JumpBack(18), OutputNumCell(21)]))
+        self.assertSequenceEqual(actual_tokenstream, tokentream_oracle)

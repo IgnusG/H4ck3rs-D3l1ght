@@ -10,5 +10,3 @@ class HackersWarning(Warning):
 
 class IntegerPositionBadProgrammerSucks(HackersException):
     pass
-
-# TODO: Move all exceptions and warnings here ...
