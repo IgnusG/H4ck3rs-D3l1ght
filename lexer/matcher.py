@@ -1,4 +1,5 @@
 from lexer.definitions.tokens import Token
+from lexer.matchers.condition_matcher import ConditionMatcher
 from lexer.matchers.edit_cell_matcher import EditCellMatcher
 from lexer.matchers.hackersdelight_matcher import HackersDelightMatcher
 from lexer.matchers.integer_matcher import IntegerMatcher
@@ -17,12 +18,6 @@ class TokenStream:
 
     def append(self, item):
         self.token_stream.append(item)
-
-    def replace_with(self, position, item: Token):
-        self.token_stream.insert(position, item)
-
-        for i in range(item.token_count):
-            del self.token_stream[position+1]
 
     def __iter__(self):
         return iter(self.token_stream)
@@ -59,7 +54,8 @@ class Matcher:
             MovePointerMatcher.match(tokenizer, order, pointer),
             EditCellMatcher.match(tokenizer, order, pointer),
             IONumMatcher.match(tokenizer, order, pointer),
-            IOCharMatcher.match(tokenizer, order, pointer)
+            IOCharMatcher.match(tokenizer, order, pointer),
+            ConditionMatcher.match(tokenizer, order, pointer)
         ] if token]
 
         return tokens[0] if tokens else False
