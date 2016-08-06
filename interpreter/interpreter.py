@@ -12,7 +12,7 @@ class CriticalExceptionOMG(Exception):
 
 
 class Interpreter:
-    version = '0.1'
+    version = '0.2'
     internal_pointer = 0
     internal_storage = [0]
 
